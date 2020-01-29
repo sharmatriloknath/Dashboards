@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- views -->
+
+    <record id="view_attendance_policies_tree" model="ir.ui.view">
+        <field name="name">employee.policies.list.tree</field>
+        <field name="model">employee.policies.list</field>
+        <field name="arch" type="xml">
+            <tree string="Attendance Policies">
+                <field name="policy_name"/>
+                <field name="per_late_arrival"/>
+                <field name="per_early_departure"/>
+                <field name="month_late"/>
+                <field name="req_punch"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="hr_attendance_policies_view_form" model="ir.ui.view">
+        <field name="name">employee.policies.list.form</field>
+        <field name="model">employee.policies.list</field>
+        <field name="arch" type="xml">
+            <form string="Employee attendance Policies">
+                <sheet>
+                     <div>
+                            <label for="policy_name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="policy_name" placeholder="Policy's Name" required="True"/>
+                            </h1>
+                        </div>
+                    <group string="Advance Employee Policy Details">
+                        <group>
+                            <field name="per_late_arrival" widget="float_time"/>
+                            <field name="max_hours" widget="float_time" required="True"/>
+                        </group>
+                        <group>
+                            <field name="per_early_departure" widget="float_time"/>
+                            <field name="working_hrs_for_absent" widget="float_time"/>
+                        </group>
+                        <group>
+                            <field name="working_hrs_for_present" widget="float_time" required="True"/>
+                        </group>
+                    </group>
+                    <group string="Half Days and Absent For Late Arrival And Early departure">
+                        <group>
+                        <field name="late_arrival" widget="float_time"/>
+                         </group>
+                        <group>
+                            <field name="show_late_arrival"/>
+                        </group>
+                        <group>
+                            <field name="early_departure" widget="float_time"/>
+                        </group>
+                        <group>
+                            <field name="show_early_departure"/>
+                        </group>
+                    </group>
+                    <group string="Other Employee Policy Details">
+                        <group>
+                           <field name="req_punch" required="True"/>
+                        </group>
+                        <group>
+                            <field name="single_punch"/>
+                        </group>
+                    </group>
+                        <group>
+                            <field name="enable_setting"/>
+
+                            <field name="cut_days_or_leave" widget="radio"/>
+                        </group>
+                    <group>
+                        <group>
+                            <field name="month_late"/>
+                        </group>
+                        <group>
+                            <field name="cut_days" widget="radio"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="ignore_ot" widget="float_time"/>
+                            <field name="max_ot_allow" widget="radio"/>
+                            <field name="max_ot_hrs" widget="float_time"/>
+                        </group>
+                        <group>
+                            <field name="no_hrs" widget="float_time"/>
+                            <field name="equal_to_days"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <!-- actions -->
+
+    <record id="hr_attendance_policies_action" model="ir.actions.act_window">
+        <field name="name">Attendances Policies</field>
+        <field name="res_model">employee.policies.list</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No attendance records found
+            </p><p>
+                The attendance records of your employees will be displayed here.
+            </p>
+        </field>
+    </record>
+     <record id="hr_attendance_policies_action_tree" model="ir.actions.act_window">
+        <field name="name">Attendance Policies</field>
+        <field name="res_model">employee.policies.list</field>
+        <field name="view_type">tree</field>
+        <field name="view_mode">tree,form</field>
+
+    </record>
+
+    <record id="hr_employee_policy_name" model="ir.ui.view">
+            <field name="name">hr.employee.policy.name</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                 <xpath expr="//page[@name='public']//field[@name='coach_id']" position="after">
+                    <field name="policy_name" force_save="1"/>
+                </xpath>
+            </field>
+    </record>
+    <!-- Menus -->
+
+
+    <menuitem id="menu_hr_attendance_my_attendance_policy1" name="Attendance Policies" parent="hr_attendance.menu_hr_attendance_settings" sequence="40" action="hr_attendance_policies_action"/>
+</odoo>

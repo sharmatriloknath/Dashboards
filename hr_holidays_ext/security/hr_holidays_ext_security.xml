@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_holidays_ext.hr_holidays_status_for_rule_multi_company" model="ir.rule">
+        <field name="name">Leave Type multi company rule</field>
+        <field name="model_id" ref="model_hr_holidays_status"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','in',[user.company_id.id])]</field>
+    </record>
+ <!--Rule for holidays Nidhi-->
+     <record id="hr_holidays_ext.hr_holidays_rule_newfor__multi_company" model="ir.rule">
+        <field name="name">Leaves multi company rule</field>
+        <field name="model_id" ref="model_hr_holidays"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','in',[user.company_id.id])]</field>
+    </record>
+
+    <record model="ir.rule" id="resource_calendar_leaves_multi_company_rule">
+        <field name="name">Resource Calendar Leaves</field>
+        <field name="model_id" ref="model_resource_calendar_leaves"/>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+		 <field name="global" eval="True"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','in',[user.company_id.id])]</field>
+    </record>
+<!--New added-->
+     <record id="hr_holidays.group_leaves_management" model="res.groups">
+            <field name="name">Management</field>
+            <field name="model_id" ref="model_hr_holidays"/>
+            <field name="implied_ids" eval="[(4, ref('hr_holidays.group_hr_holidays_manager'))]"/>
+             <field name="domain_force">[(1,'=',1)]</field>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+    </record>
+
+    <!-- <record model="ir.rule" id="resource_calendar_multi_company_rule">
+        <field name="name">Resource Calendar</field>
+        <field name="model_id" ref="model_resource_calendar"/>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+		 <field name="global" eval="True"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','in',[user.company_id.id])]</field>
+    </record> -->
+  <record id="hr_dept_comp_rule" model="ir.rule">
+        <field name="name">Department multi company rule</field>
+        <field name="model_id" ref="model_hr_department"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+        <!--New rule added Employee Multi company rule Nidhi-->
+    <record id="hr_emp_comp_rule" model="ir.rule">
+        <field name="name">Employee multi company rule</field>
+        <field name="model_id" ref="model_hr_employee"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+	<!--Job Multi company Rule-->
+    <record id="hr_job_comp_rule" model="ir.rule">
+        <field name="name">Job multi company rule</field>
+        <field name="model_id" ref="model_hr_job"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+	<!--Added today 21 june-->
+</odoo>

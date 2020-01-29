@@ -1,0 +1,551 @@
+<odoo>
+    <data>
+         <record id="view_holiday_form_leave_inherit" model="ir.ui.view">
+        <field name="name">hr.holidays.status.form.inherit</field>
+        <field name="model">hr.holidays.status</field>
+        <field name="inherit_id" ref="hr_holidays.edit_holiday_status_form"/>
+        <field name="arch" type="xml">
+             <xpath expr="//field[@name='name']" position="before">
+                <field name="employee_type" required="True"/>
+             </xpath>
+            <xpath expr="//field[@name='limit']" position="after">
+                <field name="highlight_override"/>
+                <field name="allocation_in_probation"/>
+                <field name="allocation_in_probation_selection" widget="radio" attrs="{'invisible': [('allocation_in_probation', '=', False)]}"/>
+                <field name="alloc_request"/>
+                <field name="restrict_on_notice"/>
+                <field name="restrict_on_notice_selection" widget="radio" attrs="{'invisible': [('restrict_on_notice', '=', False)]}"/>
+            </xpath>
+             <xpath expr="//group[2]" position="after">
+                 <group string="Leave and Approval Policy">
+<!--                     <field name="leaves_policy_id" context="{'default_employee_type': employee_type}" string="Leave Policies"/>-->
+                     <field name="leaves_policy_id"/>
+                    <field name="approval_policy_id" context="{'default_employee_type': employee_type}" string="Approval Policies"/>
+                     <!--<button string ="Leave Policy" class="btn-success oe_inline" type="object"-->
+                                        <!--name="leave_policy" />-->
+                      <!--<button string ="Approval Policy" class="btn-success oe_inline" type="object"-->
+                                        <!--name="leave_approval"/>-->
+                 </group>
+            </xpath>
+            <xpath expr="//group" position="after">
+                <notebook string = 'Allocation Policies'>
+                    <page string = 'Allocation Policies'>
+                        <group>
+                            <group string="Accrual">
+                                <!--<div>-->
+                                    <!--<field name="accrual_period"  required="1"/>-->
+                                    <!--<button string ="Advance" class="btn-success oe_inline" type="object"-->
+                                        <!--name="advance_accrual_alloc" attrs="{'invisible':  ['|',('accrual_period','=','year')]}" />-->
+                                    <!--<button string ="Custom" class="btn-primary" type="object"-->
+                                        <!--name="custom_accrual_alloc" attrs="{'invisible': ['|',('accrual_period','=','year'),('accrual_period', '=', 'month')]}" />-->
+                                <!--</div>-->
+                                <button string ="Advance" class="btn-success oe_inline" type="object"
+                                        name="advance_accrual_alloc" attrs="{'invisible':  ['|',('accrual_period','=','year')]}" />
+                                <button string ="Custom" class="btn-success oe_inline" type="object"
+                                        name="custom_accrual_alloc" attrs="{'invisible': ['|',('accrual_period','=','year'),('accrual_period', '=', 'month')]}" />
+                                 <field name="accrual_period" widget="radio"/>
+                                <field name="accrual_day" attrs="{'required': [('accrual_period', '=', 'month')]}" class="oe_inline"/>
+                                <field name="accrual_month" attrs="{'invisible': ['|',('accrual_period', '=', 'month'),('accrual_period', '=', 'custom')]}"/>
+                                <field name="no_of_days" required="1"/>
+                            </group>
+                            <group string="Reset">
+                                <!--<label for="reset_period">-->
+                                    <!--<div>-->
+                                        <!--<field name="reset_period" class="oe_inline"/>-->
+                                        <!--<field name="reset_day" attrs="{'required': [('reset_period', '=', 'year')]}" class="oe_inline"/>-->
+                                        <!--<field name="reset_month" attrs="{'invisible': [('reset_period', '=', 'month')],'required': [('reset_period', '=', 'year')]}" class="oe_inline"/>-->
+                                    <!--</div>-->
+                                <!--</label>-->
+                                <field name="reset_period" widget="radio"/>
+                                <field name="reset_day" attrs="{'required': [('reset_period', '=', 'year')]}"/>
+                                <field name="reset_month" attrs="{'invisible': [('reset_period', '=', 'month')],'required': [('reset_period', '=', 'year')]}"/>
+                            </group>
+                            <group string="Leave Movement">
+                                <field name="reset_type"/>
+                                <field name="carry_fwd_type" widget="radio" attrs="{'invisible': [('reset_type', '=', 'encash')]}" />
+                                <field name="carry_fwd_value" attrs="{'invisible': [('reset_type', '=', 'encash')]}"/>
+                                <field name="encash_type" widget="radio" attrs="{'invisible': [('reset_type', '=', 'carry')]}" />
+                                <field name="encash_value" attrs="{'invisible': [('reset_type', '=', 'carry')]}"/>
+                                <label for="expiry_type"/>
+                                <div>
+                                    <field name="expiry_value" class="oe_inline"/>
+                                    <field name="expiry_type" class="oe_inline"/>
+                                </div>
+                           </group>
+                            <!--<group>-->
+
+                            <!--</group>-->
+                           <group string="Prorate Accrual">
+                                <field name="prorate_type" widget="radio"/>
+                              <!--<button string ="Advance" class="btn-danger" type="object"-->
+                                      <!--name="advance_accrual_alloc" attrs="{'invisible': [('prorate_type','=','do_not_prorate')]}" />-->
+                          </group>
+                        </group>
+                    </page>
+                </notebook>
+            </xpath>
+        </field>
+    </record>
+                <record id="view_holiday_status_tree_inherit" model="ir.ui.view">
+            <field name="name">hr.holidays.status.tree</field>
+            <field name="model">hr.holidays.status</field>
+                    <field name="inherit_id" ref="hr_holidays.view_holiday_status_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="before">
+                     <field name="employee_type"/>
+                </xpath>
+            </field>
+        </record>
+
+       <record id="new_form_view_linked_advance_alloc" model="ir.ui.view">
+        <field name="name">hr.holidays.status.form</field>
+        <field name="model">hr.holidays.status</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Advance Alloc">
+                        <group>
+                            <field name="employee_type" readonly="1"/>
+                            <field name="name" readonly="1"/>
+                        </group>
+                <notebook>
+                    <page string="Advance Allocation">
+                        <field name="advance_link_id">
+                            <tree editable="bottom">
+                                 <field name="employee_type" force_save="1" invisible="1"/>
+                              <field name="leave_type"  force_save="1" invisible="1"/>
+                               <field name="from_num" placeholder="No of absents"/>
+                              <field name="to_num" placeholder="No of absents"/>
+                              <field name="count" placeholder=""/>
+                              <field name="indentifier_alloc"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+                    <footer class="oe_edit_only">
+                        <button string="Confirm" special="save" class="oe_highlight"/>
+                        <button string="Discard" special="cancel"/>
+                    </footer>
+                </form>
+        </field>
+    </record>
+        <!--Approval policies-->
+         <record id="view_approval_master" model="ir.ui.view">
+        <field name="name">leave.approval.form</field>
+        <field name="model">leave.approval</field>
+        <field name="arch" type="xml">
+            <form name="Leave Approval Hierarchy" duplicate="0" delete="0">
+                <sheet>
+                    <group name="Approval" string="Approval Process">
+<!--                        <field name="employee_type" force_save="1" readonly="1" />-->
+                         <!--<field name="leave_type" force_save="1"/>-->
+                        <field name="name"/>
+                        <field name="leave_type" force_save="1"/>
+                        <field name="reporting_manager"/>
+                        <field name="hod"/>
+                        <field name="hr_manager"/>
+                </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+         <!--<record id="view_approval_tree" model="ir.ui.view">-->
+        <!--<field name="name">leave.approval.tree</field>-->
+        <!--<field name="model">leave.approval</field>-->
+        <!--<field name="arch" type="xml">-->
+            <!--<tree  string="Approval Policies">-->
+            <!--<field name="employee_type" readonly="1"/>-->
+             <!--<field name="leave_type" readonly="1"/>-->
+            <!--<field name="reporting_manager"/>-->
+            <!--<field name="hod"/>-->
+            <!--<field name="hr_manager"/>-->
+            <!--</tree>-->
+        <!--</field>-->
+    <!--</record>-->
+
+        <record model="ir.actions.act_window" id="approval_view_action">
+      <field name="name">Leave Approval</field>
+      <field name="res_model">leave.approval</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+          <menuitem name="Approval Process" id="approval_policy" action="approval_view_action"  parent="hr_holidays.menu_hr_holidays_root"
+            groups="hr_holidays.group_hr_holidays_manager" sequence="105"/>
+
+      <!--  Leave policies -->
+         <record id="view_leave_policies_form" model="ir.ui.view">
+        <field name="name">leaves.policy.form</field>
+        <field name="model">leaves.policy</field>
+        <field name="arch" type="xml">
+            <form duplicate="0" delete="0">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+<!--                         <field name="employee_type" force_save="1" readonly="1"/>-->
+                        <field name="leave_type" force_save="1"/>
+<!--                        <field name="name" force_save="1"/>-->
+
+                    </group>
+                    <group>
+                         <group string="Leave Policies">
+                                  <field name="weekends_leave_period" widget="radio"/>
+<!--                                  <field name="weekends_count" placeholder="Enter value in days"-->
+<!--                                         attrs="{'invisible': [('weekends_leave_period', '=', 'dont count')]}"/>-->
+<!--                                  <field name="holiday_leave_period" widget="radio"/>-->
+<!--                                  <field name="holiday_count" placeholder="Enter value in days"-->
+<!--                                         attrs="{'invisible': [('holiday_leave_period', '=', 'dont count')]}"/>-->
+<!--                                 <field name="allow_leave_exceed" widget="radio"/>-->
+                         </group>
+                         <group string="Duration Allowed">
+                                 <field name="dur_full" />
+                                <field name="dur_half" />
+<!--                                <field name="dur_quarter" />-->
+<!--                                <field name="dur_hour" />-->
+                             <separator/>
+                                 <field name="leave_app_advance_sub" placeholder="Enter value in days"/>
+                                 <field name="min_leave_avail" placeholder="Enter value in days"/>
+                                 <field name="max_leave_avail" placeholder="Enter value in days"/>
+                                 <field name="min_leave_app_gap" placeholder="Enter value in days"/>
+                                 <field name="min_app_per_year" placeholder="Number of applications"/>
+<!--                                 <field name="leave_not_with" force_save="1"  widget="many2many_tags"  domain="[('employee_type', '=', employee_type)]" attrs="{'readonly':[('employee_type','=',False)]}"/>-->
+                                 <field name="leave_not_with" force_save="1"  widget="many2many_tags"/>
+                         </group>
+                    </group>
+                </sheet>
+<!--                    ravi start at 13/9/2019 for messaging buttons-->
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+<!--                    ravi end-->
+            </form>
+        </field>
+    </record>
+
+     <!--<record id="view_leave_policies_tree" model="ir.ui.view">-->
+        <!--<field name="name">leaves.policy.tree</field>-->
+        <!--<field name="model">leaves.policy</field>-->
+        <!--<field name="arch" type="xml">-->
+            <!--<tree string="Leave Policies">-->
+            <!--<field name="employee_type"/>-->
+            <!--<field name="leave_type"/>-->
+            <!--<field name="leave_name" force_save="1"/>-->
+            <!--<field name="weekends_leave_period"/>-->
+<!--&lt;!&ndash;            <field name="weekends_count"/>&ndash;&gt;-->
+<!--&lt;!&ndash;            <field name="holiday_count"/>&ndash;&gt;-->
+<!--&lt;!&ndash;            <field name="allow_leave_exceed"/>&ndash;&gt;-->
+<!--&lt;!&ndash;             <field name="dur_full" />&ndash;&gt;-->
+<!--&lt;!&ndash;            <field name="dur_half" />&ndash;&gt;-->
+<!--&lt;!&ndash;            <field name="dur_quarter" />&ndash;&gt;-->
+<!--&lt;!&ndash;            <field name="dur_hour" />&ndash;&gt;-->
+             <!--<field name="leave_app_advance_sub" />-->
+             <!--<field name="min_leave_avail" />-->
+             <!--<field name="max_leave_avail" />-->
+             <!--<field name="min_leave_app_gap"/>-->
+             <!--<field name="min_app_per_year"/>-->
+             <!--<field name="leave_not_with"/>-->
+            <!--</tree>-->
+        <!--</field>-->
+    <!--</record>-->
+
+         <record id="new_form_view_linked_custom_alloc" model="ir.ui.view">
+        <field name="name">hr.holidays.status.form</field>
+        <field name="model">hr.holidays.status</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Advance Alloc">
+                        <group>
+                            <field name="employee_type" readonly="1" force_save="1"/>
+                            <field name="name" readonly="1" force_save="1"/>
+                        </group>
+                <notebook>
+                    <page string="Custom Allocation">
+                        <field name="cust_link_id" force_save="1">
+                            <tree editable="bottom">
+                                  <field name="mon_1"/>
+                                  <field name="mon_2"/>
+                                  <field name="mon_3"/>
+                                  <field name="mon_4"/>
+                                  <field name="mon_5"/>
+                                  <field name="mon_6"/>
+                                  <field name="mon_7"/>
+                                  <field name="mon_8"/>
+                                  <field name="mon_9"/>
+                                  <field name="mon_10"/>
+                                  <field name="mon_11"/>
+                                  <field name="mon_12"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+                    <footer class="oe_edit_only">
+                        <button string="Confirm" special="save" class="oe_highlight"/>
+                        <button string="Discard" special="cancel"/>
+                    </footer>
+                </form>
+        </field>
+    </record>
+        <!--Custom Month Allocation form view-->
+<!--     <record id="view_custom_mon_alloc_form" model="ir.ui.view">-->
+<!--    <field name="name">custom.mon.alloc.form</field>-->
+<!--    <field name="model">custom.mon.alloc</field>-->
+<!--    <field name="arch" type="xml">-->
+<!--    <form name="Custom Monthly Allocation">-->
+<!--        <sheet>-->
+<!--             <group string="Custom Monthly Allocation">-->
+<!--                     <field name="leave_type"/>-->
+<!--                    <field name="employee_type"/>-->
+<!--                 <group>-->
+<!--                          <field name="mon_1"/>-->
+<!--                          <field name="mon_2"/>-->
+<!--                          <field name="mon_3"/>-->
+<!--                          <field name="mon_4"/>-->
+<!--                          <field name="mon_5"/>-->
+<!--                          <field name="mon_6"/>-->
+<!--                 </group>-->
+<!--                 <group>-->
+<!--                          <field name="mon_7"/>-->
+<!--                          <field name="mon_8"/>-->
+<!--                          <field name="mon_9"/>-->
+<!--                          <field name="mon_10"/>-->
+<!--                          <field name="mon_11"/>-->
+<!--                          <field name="mon_12"/>-->
+<!--                 </group>-->
+<!--                 </group>-->
+<!--        </sheet>-->
+<!--        </form>-->
+<!--        </field>-->
+<!--    </record>-->
+        <!--Advance Accrual Form View-->
+     <!--<record id="view_advance_accru_alloc_form" model="ir.ui.view">-->
+    <!--<field name="name">advance.accru.alloc.form</field>-->
+    <!--<field name="model">advance.accru.alloc</field>-->
+    <!--<field name="arch" type="xml">-->
+    <!--<form name="approval view">-->
+            <!--<sheet string="Advance Accrual">-->
+                 <!--<group string="Advance Accrual">-->
+                        <!--<field name="leave_type"/>-->
+                        <!--<field name="employee_type"/>-->
+                     <!--<group>-->
+                              <!--<field name="from_num" placeholder="No of absents"/>-->
+                              <!--<field name="to_num" placeholder="No of absents"/>-->
+                              <!--<field name="count" placeholder=""/>-->
+                              <!--<field name="indentifier_alloc"/>-->
+                     <!--</group>-->
+                 <!--</group>-->
+            <!--</sheet>-->
+        <!--</form>-->
+    <!--</field>-->
+<!--</record>-->
+        <!--  Inheritance of hr_employee-->
+         <record id="view_employee_form_inherit" model="ir.ui.view">
+        <field name="name">hr.employee.form.inherit</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+             <xpath expr="//field[@name='user_id']" position="after">
+                <field name="employee_type"/>
+                <field name="resignation_date"/>
+                <field name="notice_period_days"/>
+                <field name="notice_period"/>
+                <field name="from_notice" attrs="{'invisible': [('notice_period','=', False)]}"/>
+                <field name="to_notice" attrs="{'invisible': [('notice_period','=', False)]}"/>
+                <field name="probation"/>
+                <field name="start_probation" attrs="{'invisible': [('probation','=', False)]}"/>
+                 <field name="end_probation" attrs="{'invisible': [('probation','=', False)]}"/>
+                 <field name="last_day"/>
+                 <field name="region_id"/>
+             </xpath>
+             <xpath expr="//page/group/group[2]/field[@name='parent_id']" position="after">
+                        <field name="hod"/>
+
+
+<!--                    <field name="hr_holidays_ids" nolabel="1" invisible="1">-->
+<!--                        <tree>-->
+<!--                            <field name="employee_id"/>-->
+<!--                            <field name="state"/>-->
+<!--                        </tree>-->
+<!--                    </field>-->
+             </xpath>
+<!--            <xpath expr="//page/group/[1]/field[@name='remaining_leaves']" position="after">-->
+<!--                <field name="rem_val"  invisible="0"/>-->
+
+<!--            </xpath>-->
+
+        </field>
+    </record>
+<!--        <record id="view_employee_form_leave_inherit_view_ext" model="ir.ui.view">-->
+<!--        <field name="name">hr.employee.leave.form.inherit</field>-->
+<!--        <field name="model">hr.employee</field>-->
+<!--        <field name="inherit_id" ref="hr_holidays.view_employee_form_leave_inherit"/>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <xpath expr="//field[@name='remaining_leaves']" position="after">-->
+<!--                <field name="rem_val"  invisible="0"/>-->
+
+<!--            </xpath>-->
+<!--        </field>-->
+<!--    </record>-->
+
+    <record id="view_advance_accru_alloc_tree" model="ir.ui.view">
+    <field name="name">advance.accru.alloc.tree</field>
+    <field name="model">advance.accru.alloc</field>
+    <field name="arch" type="xml">
+     <tree>
+          <field name="from_num" placeholder="No of absents"/>
+          <field name="to_num" placeholder="No of absents"/>
+          <field name="count" placeholder=""/>
+          <field name="indentifier_alloc"/>
+     </tree>
+    </field>
+</record>
+        <!--Menu Action for Leave Policy-->
+        <record model="ir.actions.act_window" id="leave_policies_action">
+      <field name="name">Leave Policies</field>
+      <field name="res_model">leaves.policy</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+        <menuitem name="Leave Policies" id="leaves_policy" action="leave_policies_action"
+                  groups="hr_holidays.group_hr_holidays_manager"   parent="hr_holidays.menu_hr_holidays_root" sequence="106"/>
+
+<!--Trilok Start-->
+        <record id="view_for_leave_adjustment" model="ir.ui.view">
+            <field name="name">hr.holidays.tree.view.adjustment</field>
+            <field name="model">hr.holidays</field>
+            <field name="inherit_id" ref="hr_holidays.edit_holiday_new"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='mcomment']" position="after">
+
+                            <page string="Leaves Adjustment">
+                                 <field name="adjustment_holiday_ids">
+                                    <tree editable="1">
+                                          <field name="employee_id" readonly="1" force_save="1" invisible="1"/>
+                                          <field name="leave_type" readonly="1" force_save="1"/>
+                                          <field name="balance" readonly="1" force_save="1"/>
+                                          <field name="adjusted_days" force_save="1"/>
+                                          <field name="adjusted_from_date" force_save="1"/>
+                                          <field name="adjusted_to_date" force_save="1"/>
+<!--                                          <field name="ref_id" force_save="1"/>-->
+                                    </tree>
+                                 </field>
+                            </page>
+                </xpath>
+            </field>
+
+        </record>
+<!--        Trilok End-->
+
+    <!--Region Form And Tree View-->
+        <record id="region_tree_view" model="ir.ui.view">
+        <field name="name">region.tree.view</field>
+        <field name="model">region</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="region">
+                <field name="name"/>
+                <field name="country_id"/>
+            </tree>
+        </field>
+        </record>
+
+         <record id="region_form_view" model="ir.ui.view">
+            <field name="name">region.view.tree</field>
+            <field name="model">region</field>
+             <field name="type">form</field>
+            <field name="arch" type="xml">
+                 <form string="Region View">
+                     <group>
+                         <group>
+                            <field name="name"/>
+                            <field name="country_id"/>
+                        </group>
+                         <group>
+                            <field name="company_id"/>
+                        </group>
+                     </group>
+                 </form>
+            </field>
+        </record>
+
+         <record id="region_action_view" model="ir.actions.act_window">
+        <field name="name">Region Action</field>
+        <field name="res_model">region</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="region_tree_view"/>
+        </record>
+
+        <menuitem id="region_wise_list" name="Region Master"  action="region_action_view"  parent="hr_menu.hr_operation_menu" sequence="9"/>        <!--End Of Region-->
+
+        <!-- Public Holidays View-->
+        <record id="Public_holiday_tree_view" model="ir.ui.view">
+        <field name="name">public.tree.view</field>
+        <field name="model">holidays.master</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Public Holidays">
+                <field name="name"/>
+                <field name="description"/>
+                <field name="year"/>
+                <field name="region_id"/>
+            </tree>
+        </field>
+        </record>
+
+         <record id="holiday_master_form_view" model="ir.ui.view">
+            <field name="name">holidays.master.view.tree</field>
+            <field name="model">holidays.master</field>
+             <field name="type">form</field>
+            <field name="arch" type="xml">
+
+                 <form string="Public Holidays">
+<!--                    <header>-->
+<!--                        <button name="previous_years_list"  string="Previous" type="object" class="btn-success"/>-->
+<!--                        <button name="current_year_list"  string="Current" type="object" class="btn-primary"/>-->
+<!--                        <button name="next_year_list"  string="Next" type="object" class="btn-secondary"/>-->
+<!--                    </header>-->
+                     <sheet>
+                     <group>
+                         <group>
+                             <span style="color:black; font-weight:bold;">
+                             <h1>
+                             <field name="name" attrs="{'invisible': [('region_id', '=',  False)]}" readonly="1" force_save="1"/>
+                             </h1>
+                             </span>
+                            <field name="description"/>
+                            <field name="year"/>
+                            <field name="region_id"/>
+                        </group>
+                         <group>
+                            <field name="company_id" readonly="1"/>
+                        </group>
+                     </group>
+
+                      <notebook>
+                             <page string="Public Holidays">
+                               <field name="global_leaves_ids">
+                                    <tree editable="top">
+                                        <field name="name"/>
+                                        <field name="date_from"/>
+                                        <field name="date_to"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                     </sheet>
+
+                 </form>
+            </field>
+        </record>
+
+         <record id="public_holidays_action_view" model="ir.actions.act_window">
+        <field name="name">Public Holidays</field>
+        <field name="res_model">holidays.master</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="Public_holiday_tree_view"/>
+        </record>
+
+        <menuitem id="publid_holidays_list" name="RegionWise Holiday Master"  action="public_holidays_action_view"  parent="hr_menu.hr_operation_menu" sequence="10"/>
+
+        <!-- Public Holidays View-->
+    </data>
+</odoo>

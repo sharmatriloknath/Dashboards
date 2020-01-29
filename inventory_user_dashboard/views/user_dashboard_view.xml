@@ -1,0 +1,285 @@
+<odoo>
+    <record id="inventory_user_kanban_view" model="ir.ui.view">
+        <field name="name">inventory.user.dashboard.kanban</field>
+        <field name="model">inventory.user.dashboard</field>
+        <field name="arch" type="xml">
+            <kanban class="oe_background_grey o_kanban_dashboard o_account_kanban" create="0">
+                <field name="computation" invisible="1"/>
+                <field name="name"/>
+                <field name="total"/>
+                <field name="pending"/>
+                <field name="color"/>
+                <field name="user_wise_id"/>
+                <field name="view_type"/>
+                <field name="have_child"/>
+                <field name="emp_id"/>
+                <field name="validate"/>
+                <field name="rejected"/>
+                <field name="returns"/>
+                <field name="verification"/>
+                <field name="mstock"/>
+                <field name="hsn"/>
+                <field name="allocated"/>
+                <field name="unallocated"/>
+                <field name="pallocated"/>
+                <field name="approved"/>
+                <field name="trigger"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="#{kanban_color(record.color.raw_value)}">
+                            <div>
+                                <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                    <div t-if="record.have_child.raw_value === true">
+                                        <a name="change_view_type" type="object" context="{'view_type': 1}">ACTIVITY WISE</a>
+                                        <a style="float:right; margin-right:10px" name="change_view_type" type="object" context="{'view_type': 0}">USER WISE</a>
+                                    </div>
+                                    <div class="o_kanban_record_top ">
+                                        <div class="o_kanban_record_headings">
+                                            <div>
+                                                <h3 >
+                                                     <strong><span><t t-esc="record.name.value"/></span></strong>
+                                                </h3>
+                                            </div>
+                                        </div>
+                                        <div t-attf-class="o_kanban_card_header">
+                                            <div class="o_kanban_manage_button_section">
+                                                <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" /></a>
+                                            </div>
+                                        </div>
+                                     </div>
+                                     <div class="container o_kanban_card_content">
+                                         <div class="row">
+                                            <t t-value="record.view_type.raw_value" t-set="type"/>
+                                            <t t-if="type === true" t-call="ActivityWise"/>
+                                            <t t-if="type === false" t-call="UserWise"/>
+                                         </div>
+                                    </div>
+                                    <div class="container o_kanban_card_manage_pane">
+                                         <div class="row">
+                                                    <div class="col-xs-6 o_kanban_card_manage_section o_kanban_manage_view">
+                                                        <div class="o_kanban_card_manage_title">
+                                                            <span>View</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-6 o_kanban_card_manage_section o_kanban_manage_new">
+                                                        <div class="o_kanban_card_manage_title">
+                                                            <span>New</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                        <div t-if="widget.editable" class="o_kanban_card_manage_settings row">
+                                            <div class="col-xs-8">
+                                                <ul class="oe_kanban_colorpicker" data-field="color"/>
+                                            </div>
+                                            <!--<div class="col-xs-4 text-right">-->
+                                                <!--<a type="edit">Settings</a>-->
+                                            <!--</div>-->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                    <t t-name="ActivityWise">
+                         <div t-if="record.name.raw_value == 'material.req.slip' or record.name.raw_value =='product.template' or record.name.raw_value =='stock.warehouse.orderpoint'">
+                             <a name="get_list_view" type="object" t-attf-data-context="{'emp_id': {{record.emp_id.value}}, 'label_name':'total'}">
+                                 Total <t t-esc="record.name.value"/>: <t t-esc="record.total.value"/>
+                             </a>
+                         </div>
+                        <div t-if="record.name.raw_value == 'material.req.slip' or record.name.raw_value =='receipt.at.gate' or record.name.raw_value =='receipt.at.qc' or  record.name.raw_value =='receipt.at.main' or  record.name.raw_value =='material.issue'">
+
+                             <a t-log="record"  name="get_list_view" type="object" t-attf-data-context="{'emp_id': {{record.emp_id.value}}, 'label_name':'pending'}">
+                                 Pending <t  t-esc="record.name.value"/>: <span style="color:red; font-weight:bold;"><t t-esc="record.pending.value" /></span>
+
+                             </a>
+                         </div>
+
+                        <div t-if="record.name.raw_value == 'receipt.at.gate' or record.name.raw_value =='product.template'">
+                             <a name="get_data_for_view" type="object" t-attf-data-context="{'emp_id': {{record.emp_id.value}}, 'label_name':'validate'}">
+                                 Pending Validate <t t-esc="record.name.value"/>: <t t-esc="record.validate.value"/>
+                             </a>
+                         </div>
+
+<!--                         <div t-if="record.name.raw_value == 'material.req.slip'">-->
+<!--                                 <a name="get_list_view" type="object" t-attf-data-context="{'emp_id': {{record.emp_id.value}}, 'label_name':'approved'}" class="total_btn_kan">-->
+<!--                                 Ready For PR  : <t t-esc="record.approved.value"/>-->
+<!--                             </a>-->
+<!--                         </div>-->
+
+                        <div t-if="record.name.raw_value == 'product.template'">
+                                  <div>
+                                     <a name="get_data_for_view" type="object" t-attf-data-context="{'emp_id': {{record.emp_id.value}}, 'label_name':'mstock'}">
+                                     Items Below Minimum Stock Level : <t t-esc="record.mstock.value"/>
+                                 </a>
+                                 </div>
+
+                                  <div>
+                                     <a name="get_data_for_view" type="object" t-attf-data-context="{'emp_id': {{record.emp_id.value}}, 'label_name':'hsn'}">
+                                     Items Without HSN : <t t-esc="record.hsn.value"/>
+                                 </a>
+                                 </div>
+                        </div>
+
+                         <div t-if="record.name.raw_value == 'receipt.at.qc'">
+                             <div>
+                                 <a name="get_data_for_view" type="object" t-attf-data-context="{'emp_id': {{record.emp_id.value}}, 'label_name':'rejected'}">
+                                     Rejected <t t-esc="record.name.value"/>: <t t-esc="record.rejected.value"/>
+                                 </a>
+                                 </div>
+
+                                  <div>
+                                      <a name="get_data_for_view" type="object" t-attf-data-context="{'emp_id': {{record.emp_id.value}}, 'label_name':'verification'}">
+                                     Pending Vendor Verification <t t-esc="record.name.value"/>: <t t-esc="record.verification.value"/>
+                                 </a>
+                                 </div>
+                         </div>
+
+                         <div t-if="record.name.raw_value == 'material.issue'">
+                                 <a name="get_data_for_view" type="object" t-attf-data-context="{'emp_id': {{record.emp_id.value}}, 'label_name':'returns'}">
+                                     Pending Returns : <t t-esc="record.returns.value"/>
+                                 </a>
+                         </div>
+
+                        <div t-if="record.name.raw_value == 'stock.warehouse.orderpoint'">
+                                 <a name="get_data_for_view" type="object" t-attf-data-context="{'emp_id': {{record.emp_id.value}}, 'label_name':'trigger'}">
+                                     <t t-esc="record.name.value"/> Triggered : <t t-esc="record.trigger.value"/>
+                                 </a>
+                         </div>
+
+                         <div t-if="record.name.raw_value == 'rows.and.coloum'">
+                                 <div>
+                                     <a name="get_data_for_view" type="object" t-attf-data-context="{'emp_id': {{record.emp_id.value}}, 'label_name':'allocated'}">
+                                         Allocated <t t-esc="record.name.value"/> Count : <t t-esc="record.allocated.value"/>
+                                     </a>
+                                 </div>
+
+                                  <div>
+                                      <a name="get_data_for_view" type="object" t-attf-data-context="{'emp_id': {{record.emp_id.value}}, 'label_name':'unallocated'}">
+                                     UnAllocated Items(No Bin Assigned) : <t t-esc="record.unallocated.value"/>
+                                      </a>
+                                 </div>
+                                <div>
+                                      <a name="get_data_for_view" type="object" t-attf-data-context="{'emp_id': {{record.emp_id.value}}, 'label_name':'pallocated'}">
+                                        Partially Allocated Items : <t t-esc="record.pallocated.value"/>
+                                      </a>
+                                 </div>
+                         </div>
+
+                    </t>
+                    <t t-name="UserWise">
+                        <div >
+                            <strong class="o_kanban_record_title"> <t t-foreach="record.user_wise_id.raw_value" t-as='o'>
+                                                <t t-if="o.level == '1'">
+                                                   <span style="padding-left:0%;">
+                                                        <a name="get_list_view" type="object" t-attf-data-context="{'emp_id': {{o.emp_id}}, 'label_name':'total'}">
+                                                            <t t-esc="o.emp_name"/>
+                                                            <t t-esc="o.user_wise_total"/>
+                                                       </a>
+                                                       <a name="get_list_view" type="object" t-attf-data-context="{'emp_id': {{o.emp_id}}, 'label_name':'pending'}">
+                                                           , Delay
+                                                           <t t-esc="o.user_wise_pending"/>
+                                                       </a>
+                                                   </span><br/>
+                                                </t>
+                                                <t t-if="o.level == '2'">
+                                                   <span style="padding-left:5%;">
+                                                        <a name="get_list_view" type="object" t-attf-data-context="{'emp_id': {{o.emp_id}}, 'label_name':'total'}">
+                                                            <t t-esc="o.emp_name"/>
+                                                            <t t-esc="o.user_wise_total"/>
+                                                       </a>
+                                                       <a name="get_list_view" type="object" t-attf-data-context="{'emp_id': {{o.emp_id}}, 'label_name':'pending'}">
+                                                           , Delay
+                                                           <t t-esc="o.user_wise_pending"/>
+                                                       </a>
+                                                   </span><br/>
+                                                </t>
+                                                <t t-if="o.level == '3'">
+                                                   <span style="padding-left:10%;">
+                                                        <a name="get_list_view" type="object" t-attf-data-context="{'emp_id': {{o.emp_id}}, 'label_name':'total'}">
+                                                            <t t-esc="o.emp_name"/>
+                                                            <t t-esc="o.user_wise_total"/>
+                                                       </a>
+                                                       <a name="get_list_view" type="object" t-attf-data-context="{'emp_id': {{o.emp_id}}, 'label_name':'pending'}">
+                                                           , Delay
+                                                           <t t-esc="o.user_wise_pending"/>
+                                                       </a>
+                                                   </span><br/>
+                                                </t>
+                                                <t t-if="o.level == '4'">
+                                                   <span style="padding-left:15%;">
+                                                        <a name="get_list_view" type="object" t-attf-data-context="{'emp_id': {{o.emp_id}}, 'label_name':'total'}">
+                                                            <t t-esc="o.emp_name"/>
+                                                            <t t-esc="o.user_wise_total"/>
+                                                       </a>
+                                                       <a name="get_list_view" type="object" t-attf-data-context="{'emp_id': {{o.emp_id}}, 'label_name':'pending'}">
+                                                           , Delay
+                                                           <t t-esc="o.user_wise_pending"/>
+                                                       </a>
+                                                   </span><br/>
+                                                </t>
+                                                 <t t-if="o.level == '5'">
+                                                   <span style="padding-left:20%;">
+                                                        <a name="get_list_view" type="object" t-attf-data-context="{'emp_id': {{o.emp_id}}, 'label_name':'total'}">
+                                                            <t t-esc="o.emp_name"/>
+                                                            <t t-esc="o.user_wise_total"/>
+                                                       </a>
+                                                       <a name="get_list_view" type="object" t-attf-data-context="{'emp_id': {{o.emp_id}}, 'label_name':'pending'}">
+                                                           , Delay
+                                                           <t t-esc="o.user_wise_pending"/>
+                                                       </a>
+                                                   </span><br/>
+                                                </t>
+                                                 <t t-if="o.level == '6'">
+                                                   <span style="padding-left:25%;">
+                                                        <a name="get_list_view" type="object" t-attf-data-context="{'emp_id': {{o.emp_id}}, 'label_name':'total'}">
+                                                            <t t-esc="o.emp_name"/>
+                                                            <t t-esc="o.user_wise_total"/>
+                                                       </a>
+                                                       <a name="get_list_view" type="object" t-attf-data-context="{'emp_id': {{o.emp_id}}, 'label_name':'pending'}">
+                                                           , Delay
+                                                           <t t-esc="o.user_wise_pending"/>
+                                                       </a>
+                                                   </span><br/>
+                                                </t>
+                                                 <t t-if="o.level == '7'">
+                                                   <span style="padding-left:35%;">
+                                                        <a name="get_list_view" type="object" t-attf-data-context="{'emp_id': {{o.emp_id}}, 'label_name':'total'}">
+                                                            <t t-esc="o.emp_name"/>
+                                                            <t t-esc="o.user_wise_total"/>
+                                                       </a>
+                                                       <a name="get_list_view" type="object" t-attf-data-context="{'emp_id': {{o.emp_id}}, 'label_name':'pending'}">
+                                                           , Delay
+                                                           <t t-esc="o.user_wise_pending"/>
+                                                       </a>
+                                                   </span><br/>
+                                                </t>
+                                    </t>
+                             </strong>
+                         </div>
+                    </t>
+            </templates>
+            </kanban>
+        </field>
+    </record>
+
+
+    <record id="open_inventory_user_dashboard_kanban" model="ir.actions.act_window">
+        <field name="name">Inventory User Dashboard</field>
+        <field name="res_model">inventory.user.dashboard</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">kanban,form</field>
+        <field name="view_id" ref="inventory_user_kanban_view"/>
+        <field name="usage">menu</field>
+        <!--<field name="context">{'search_default_dashboard':1}</field>-->
+        <!--<field name="domain">[('belongs_to_company', '=', True)]</field>-->
+        <!--<field name="help" type="html">-->
+            <!--<p>-->
+                <!--This is the accounting dashboard. If you have not yet-->
+                <!--installed a chart of account, please install one first.-->
+               <!--<a type="action" name="%(open_account_charts_modules)d">Browse available countries.</a>-->
+            <!--</p>-->
+        <!--</field>-->
+    </record>
+    <menuitem id="inventory_user_menu_board" name="User Dashboard" action="open_inventory_user_dashboard_kanban" parent="stock.menu_stock_root" sequence="0"/>
+</odoo>

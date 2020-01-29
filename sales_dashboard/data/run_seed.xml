@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+         <record forcecreate="False" id="first_item" model="sales.dashboard.query">
+            <field name="model_name">crm.enquiry</field>
+            <field name="label_name">pending</field>
+            <field name="query">select * from crm_enquiry where state = 'draft' and company_id=</field>
+        </record>
+         <record  forcecreate="False" id="sec_item" model="sales.dashboard.query">
+            <field name="model_name">crm.enquiry</field>
+            <field name="label_name">approved</field>
+            <field name="query">select * from crm_enquiry where state = 'approved' and company_id=</field>
+        </record>
+        <record forcecreate="False" id="3rd_item" model="sales.dashboard.query">
+            <field name="model_name">sale.quotation</field>
+            <field name="label_name">pending</field>
+            <field name="query">select * from sale_quotation where state = 'draft' and company_id=</field>
+        </record>
+        <record forcecreate="False" id="4th_item" model="sales.dashboard.query">
+            <field name="model_name">sale.order</field>
+            <field name="label_name">pending</field>
+            <field name="query">select * from sale_order where state = 'draft' and company_id=</field>
+        </record>
+
+        <function id="create_sales_dashboard_function" model="sales.dashboard" name="create_card_for_sales_user" />
+
+    </data>
+</odoo>

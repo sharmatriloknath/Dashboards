@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.rule" id="sales_dashboard_user">
+            <field name="name">Sales Dashboard User</field>
+            <field name="model_id" ref="model_sales_dashboard"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">[('user_id', '=', user.id)]</field>
+        </record>
+
+        <record model="ir.rule" id="sales_user_dashboard_company_rule">
+            <field name="name">Sales Dashboard company</field>
+            <field name="model_id" ref="model_sales_dashboard"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">[('company_id', '=', user.company_id.id)]</field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+	     <!--Nidhi Scheduler for Leaves Allocation 16 May/19 -->
+         <record forcecreate="True" id="ir_cron_leaves_allocation" model="ir.cron">
+                    <field name="name">Leaves Allocation</field>
+                    <field name="model_id" ref="hr_holidays_ext.model_hr_holidays_status"/>
+                    <field name="state">code</field>
+                    <field name="code">model.run_scheduler_leaves_alloc()</field>
+                    <field name="user_id" ref="base.user_root"/>
+                    <field name="interval_number">1</field>
+                    <field name="interval_type">days</field>
+                    <field name="active">True</field>
+                    <field name="numbercall">1</field>
+                    <field name="priority">0</field>
+                    <field eval="True" name="doall"/>
+         </record>
+
+
+        <!-- Scheduler For Making Employee Inactive When Current Date Will become Less Than Last Date By One Day -->
+        <record forcecreate="True" id="ir_cron_leaves_allocation" model="ir.cron">
+                    <field name="name">Do Employee Inactive After Last Date</field>
+                    <field name="model_id" ref="hr.model_hr_employee"/>
+                    <field name="state">code</field>
+                    <field name="code">model.run_scheduler_to_make_employee_inactive()</field>
+                    <field name="user_id" ref="base.user_root"/>
+                    <field name="interval_number">1</field>
+                    <field name="interval_type">days</field>
+                    <field name="active">True</field>
+                    <field name="numbercall">1</field>
+                    <field name="priority">0</field>
+                    <field eval="True" name="doall"/>
+         </record>
+    </data>
+</odoo>

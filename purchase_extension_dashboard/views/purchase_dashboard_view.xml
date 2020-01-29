@@ -1,0 +1,277 @@
+<odoo>
+    <record id="purchase_dashboard_kanban_view" model="ir.ui.view">
+        <field name="name">purchase.extension.dashboard.kanban</field>
+        <field name="model">purchase.extension.dashboard</field>
+        <field name="arch" type="xml">
+            <kanban class="oe_background_grey o_kanban_dashboard o_account_kanban" create="0">
+                <field name="computation" invisible="1"/>
+                <field name="name"/>
+                <field name="total"/>
+                <field name="require_date"/>
+                <field name="pending"/>
+                <field name="color"/>
+                <field name="user_wise_id"/>
+                <field name="view_type"/>
+                <field name="have_child"/>
+                <field name="emp_id"/>
+                <field name="cancelled"/>
+                <field name="rfq_not_sent"/>
+                <field name="email_not_sent"/>
+                <field name="inactive_vendor"/>
+                <field name="supplier_without_email"/>
+                <field name="items_without_hsn"/>
+                <field name="inactive_item"/>
+                <field name="expire_in_two_month" force_save ="1"/>
+                <field name="modified_in_last_month" force_save ="1"/>
+                <field name="exhaust_commitment_value" force_save ="1"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="#{kanban_color(record.color.raw_value)}">
+                            <div>
+                                <div t-attf-class="oe_kanban_card oe_kanban_global_click" t-log="record.have_child.raw_value">
+                                    <div t-if="record.have_child.raw_value === true">
+                                        <a name="change_view_type" type="object" context="{'view_type': 1}">ACTIVITY WISE</a>
+                                        <a style="float:right; margin-right:10px" name="change_view_type" type="object" context="{'view_type': 0}">USER WISE</a>
+                                    </div>
+                                    <div class="o_kanban_record_top">
+                                        <div class="o_kanban_record_headings">
+                                            <div>
+                                                <h3>
+                                                     <strong><span><t t-esc="record.name.value"/></span></strong>
+                                                </h3>
+                                            </div>
+                                        </div>
+                                        <div t-attf-class="o_kanban_card_header">
+                                            <div class="o_kanban_manage_button_section">
+                                                <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" /></a>
+                                            </div>
+                                        </div>
+                                     </div>
+                                     <div class="container o_kanban_card_content">
+                                         <div class="row">
+                                            <t t-value="record.view_type.raw_value" t-set="type"/>
+                                            <t t-if="type === true" t-call="ActivityWise"/>
+                                            <t t-if="type === false" t-call="UserWise"/>
+                                         </div>
+                                    </div>
+                                    <div class="container o_kanban_card_manage_pane">
+                                         <div class="row">
+                                                    <div class="col-xs-6 o_kanban_card_manage_section o_kanban_manage_view">
+                                                        <div class="o_kanban_card_manage_title">
+                                                            <span>Change Card Colour</span>
+                                                        </div>
+                                                    </div>
+                                                    <!--<div class="col-xs-6 o_kanban_card_manage_section o_kanban_manage_new">-->
+                                                        <!--<div class="o_kanban_card_manage_title">-->
+                                                            <!--<span>New</span>-->
+                                                        <!--</div>-->
+                                                    <!--</div>-->
+                                                </div>
+
+                                        <div t-if="widget.editable" class="o_kanban_card_manage_settings row">
+                                            <div class="col-xs-8">
+                                                <ul class="oe_kanban_colorpicker" data-field="color"/>
+                                            </div>
+                                            <!--<div class="col-xs-4 text-right">-->
+                                                <!--<a type="edit">Settings</a>-->
+                                            <!--</div>-->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                    <t t-name="ActivityWise">
+                         <div t-if="(record.name.raw_value != 'pr.create.data' and record.name.raw_value != 'kpi.matrix')">
+                             <!--<strong>ACTIVITY WISE</strong>-->
+                             <a name="get_total_list_view" type="object" t-attf-data-context="{'emp_id': {{record.emp_id.value}}}">
+                                 Total <t t-esc="record.name.value"/>: <t t-esc="record.total.value"/>
+                             </a>
+                         </div>
+                         <div t-if="(record.name.raw_value != 'material.req.slip' and record.name.raw_value != 'purchase.requisition' and record.name.raw_value != 'purchase.requisition.amd' and record.name.raw_value != 'kpi.matrix')">
+                             <a name="get_pending_list_view" type="object" t-attf-data-context="{'emp_id': {{record.emp_id.value}}}">
+                                 Pending : <t t-esc="record.pending.value"/>
+                             </a>
+                         </div>
+                        <div t-if="record.name.raw_value == 'pr.create.data'">
+                             <a name="get_require_date_list_view" type="object" t-attf-data-context="{'emp_id': {{record.emp_id.value}}}">
+                                 Min Require Date : <t t-esc="record.require_date.value" />
+                             </a>
+                         </div>
+
+                        <div t-if="(record.name.raw_value == 'purchase.order' || record.name.raw_value == 'purchase.req')">
+                             <a name="get_cancelled_list_view" type="object" t-attf-data-context="{'emp_id': {{record.emp_id.value}}}">
+                                 cancelled : <t t-esc="record.cancelled.value"/>
+                             </a>
+                         </div>
+                         <div t-if="record.name.raw_value == 'purchase.order'">
+                             <a name="get_unsent_list_view" type="object" t-attf-data-context="{'emp_id': {{record.emp_id.value}}}">
+                                 Email Not Sent : <t t-esc="record.email_not_sent.value"/>
+                             </a>
+                         </div>
+                        <div t-if="record.name.raw_value == 'request.for.quotation'">
+                             <a name="get_unsent_list_view" type="object" t-attf-data-context="{'emp_id': {{record.emp_id.value}}}">
+                                 RFQ not sent : <t t-esc="record.rfq_not_sent.value"/>
+                             </a>
+                         </div>
+                        <div t-if="record.name.raw_value == 'kpi.matrix'">
+                            <div>
+                               <a name="get_inactive_item_list_view" type="object" t-attf-data-context="{'emp_id': {{record.emp_id.value}}}">
+                                 Inactive Items : <t t-esc="record.inactive_item.value"/>
+                             </a>
+                            </div>
+
+                            <div>
+                                 <a name="get_inactive_vendor_list_view" type="object" t-attf-data-context="{'emp_id': {{record.emp_id.value}}}">
+                                 Inactive Vendors : <t t-esc="record.inactive_vendor.value"/>
+                             </a>
+                            </div>
+
+                            <div>
+                                <a name="get_supplier_without_email_list_view" type="object" t-attf-data-context="{'emp_id': {{record.emp_id.value}}}">
+                                Supplier Without Email : <t t-esc="record.supplier_without_email.value"/>
+                             </a>
+                            </div>
+
+                            <div>
+                                <a name="get_items_without_hsn_list_view" type="object" t-attf-data-context="{'emp_id': {{record.emp_id.value}}}">
+                                 Items Not Linked With HSN : <t t-esc="record.items_without_hsn.value"/>
+                             </a>
+                            </div>
+                         </div>
+                         <div t-if="record.name.raw_value == 'purchase.requisition'">
+                             <div>
+                                  <a name="get_expire_in_two_month_list_view" type="object" t-attf-data-context="{'emp_id': {{record.emp_id.value}}}">
+                                 Expire In Next Two Months : <t t-esc="record.expire_in_two_month.value"/>
+                             </a>
+                             </div>
+
+                              <div>
+                                  <a name="get_exhaust_commitment_value_list_view" type="object" t-log="record.exhaust_commitment_value.value" t-attf-data-context="{'emp_id': {{record.emp_id.value}}}">
+                                 Exhaust Commitment Value : <t t-esc="record.exhaust_commitment_value.value"/>
+                             </a>
+                             </div>
+
+                         </div>
+                        <div t-if="record.name.raw_value == 'purchase.requisition.amd'">
+                                <a name="get_expire_in_two_month_list_view" type="object" t-attf-data-context="{'emp_id': {{record.emp_id.value}}}">
+                                 Modified In Last 30 Days : <t t-esc="record.modified_in_last_month.value"/>
+                             </a>
+                         </div>
+                    </t>
+                    <t t-name="UserWise">
+                        <div >
+                            <strong class="o_kanban_record_title"> <t t-foreach="record.user_wise_id.raw_value" t-as='o'>
+                                                <t t-if="o.level == '1'">
+                                                   <span style="padding-left:0%;">
+                                                        <a name="get_total_list_view" type="object" t-attf-data-context="{'emp_id': {{o.emp_id}}}">
+                                                            <t t-esc="o.emp_name"/>
+                                                            <t t-esc="o.user_wise_total"/>
+                                                       </a>
+                                                       <a name="get_pending_list_view" type="object" t-attf-data-context="{'emp_id': {{o.emp_id}}}">
+                                                           , Delay
+                                                           <t t-esc="o.user_wise_pending"/>
+                                                       </a>
+                                                   </span><br/>
+                                                </t>
+                                                <t t-if="o.level == '2'">
+                                                   <span style="padding-left:5%;">
+                                                        <a name="get_total_list_view" type="object" t-attf-data-context="{'emp_id': {{o.emp_id}}}">
+                                                            <t t-esc="o.emp_name"/>
+                                                            <t t-esc="o.user_wise_total"/>
+                                                       </a>
+                                                       <a name="get_pending_list_view" type="object" t-attf-data-context="{'emp_id': {{o.emp_id}}}">
+                                                           , Delay
+                                                           <t t-esc="o.user_wise_pending"/>
+                                                       </a>
+                                                   </span><br/>
+                                                </t>
+                                                <t t-if="o.level == '3'">
+                                                   <span style="padding-left:10%;">
+                                                        <a name="get_total_list_view" type="object" t-attf-data-context="{'emp_id': {{o.emp_id}}}">
+                                                            <t t-esc="o.emp_name"/>
+                                                            <t t-esc="o.user_wise_total"/>
+                                                       </a>
+                                                       <a name="get_pending_list_view" type="object" t-attf-data-context="{'emp_id': {{o.emp_id}}}">
+                                                           , Delay
+                                                           <t t-esc="o.user_wise_pending"/>
+                                                       </a>
+                                                   </span><br/>
+                                                </t>
+                                                <t t-if="o.level == '4'">
+                                                   <span style="padding-left:15%;">
+                                                        <a name="get_total_list_view" type="object" t-attf-data-context="{'emp_id': {{o.emp_id}}}">
+                                                            <t t-esc="o.emp_name"/>
+                                                            <t t-esc="o.user_wise_total"/>
+                                                       </a>
+                                                       <a name="get_pending_list_view" type="object" t-attf-data-context="{'emp_id': {{o.emp_id}}}">
+                                                           , Delay
+                                                           <t t-esc="o.user_wise_pending"/>
+                                                       </a>
+                                                   </span><br/>
+                                                </t>
+                                                 <t t-if="o.level == '5'">
+                                                   <span style="padding-left:20%;">
+                                                        <a name="get_total_list_view" type="object" t-attf-data-context="{'emp_id': {{o.emp_id}}}">
+                                                            <t t-esc="o.emp_name"/>
+                                                            <t t-esc="o.user_wise_total"/>
+                                                       </a>
+                                                       <a name="get_pending_list_view" type="object" t-attf-data-context="{'emp_id': {{o.emp_id}}}">
+                                                           , Delay
+                                                           <t t-esc="o.user_wise_pending"/>
+                                                       </a>
+                                                   </span><br/>
+                                                </t>
+                                                 <t t-if="o.level == '6'">
+                                                   <span style="padding-left:25%;">
+                                                        <a name="get_total_list_view" type="object" t-attf-data-context="{'emp_id': {{o.emp_id}}}">
+                                                            <t t-esc="o.emp_name"/>
+                                                            <t t-esc="o.user_wise_total"/>
+                                                       </a>
+                                                       <a name="get_pending_list_view" type="object" t-attf-data-context="{'emp_id': {{o.emp_id}}}">
+                                                           , Delay
+                                                           <t t-esc="o.user_wise_pending"/>
+                                                       </a>
+                                                   </span><br/>
+                                                </t>
+                                                 <t t-if="o.level == '7'">
+                                                   <span style="padding-left:35%;">
+                                                        <a name="get_total_list_view" type="object" t-attf-data-context="{'emp_id': {{o.emp_id}}}">
+                                                            <t t-esc="o.emp_name"/>
+                                                            <t t-esc="o.user_wise_total"/>
+                                                       </a>
+                                                       <a name="get_pending_list_view" type="object" t-attf-data-context="{'emp_id': {{o.emp_id}}}">
+                                                           , Delay
+                                                           <t t-esc="o.user_wise_pending"/>
+                                                       </a>
+                                                   </span><br/>
+                                                </t>
+                                    </t>
+                             </strong>
+                         </div>
+                    </t>
+            </templates>
+            </kanban>
+        </field>
+    </record>
+
+
+    <record id="open_purchase_dashboard_kanban" model="ir.actions.act_window">
+        <field name="name">Purchase Dashboard</field>
+        <field name="res_model">purchase.extension.dashboard</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">kanban,form</field>
+        <field name="view_id" ref="purchase_dashboard_kanban_view"/>
+        <field name="usage">menu</field>
+        <!--<field name="context">{'search_default_dashboard':1}</field>-->
+        <!--<field name="domain">[('belongs_to_company', '=', True)]</field>-->
+        <!--<field name="help" type="html">-->
+            <!--<p>-->
+                <!--This is the accounting dashboard. If you have not yet-->
+                <!--installed a chart of account, please install one first.-->
+               <!--<a type="action" name="%(open_account_charts_modules)d">Browse available countries.</a>-->
+            <!--</p>-->
+        <!--</field>-->
+    </record>
+<!--    <menuitem id="purchase_menu_board" name="Dashboard" action="open_purchase_dashboard_kanban" parent="purchase.menu_purchase_root" sequence="0"/>-->
+</odoo>

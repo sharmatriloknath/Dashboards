@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+     <record id="attendance_customization_ext" model="ir.ui.view">
+        <field name="name">hr.attendance.customization.tree</field>
+        <field name="model">hr.attendance</field>
+        <field name="arch" type="xml">
+             <tree name="Attendance Detailed Form" create="0" >
+<!--                        <field name="name" />-->
+                        <field name="employee_id" invisible="1"/>
+<!--                        <field name="department"/>-->
+<!--                        <field name="designation"/>-->
+<!--                        <field name="from_date" invisible="1"/>-->
+<!--                        <field name="to_date" invisible="1"/>-->
+                        <field name="company_id" invisible="1"/>
+                        <field name="attendance_date"/>
+                        <field name="check_in" widget="string"/>
+                        <field name="check_out"/>
+                        <field name="late_coming"/>
+                        <field name="departure_early"/>
+                        <field name="worked_hours"/>
+                        <field name="overtime_duration"/>
+                        <field name="employee_day_status"/>
+                        <field name="in_manual"/>
+                        <field name="out_manual"/>
+                        <field name="ot_day_status"/>
+                        <field name="la_day_status"/>
+                        <field name="ed_day_status"/>
+                        <field name="is_review" />
+                        <field name="half_day_status" />
+                        <field name="add_or_deduct" />
+                         <button name="hr_attendance_customization_fun_ok"  string="ok" type="object" class="btn btn-success"
+                                     context="{'default_employee_id': employee_id,
+                                            'default_check_in':check_in,
+                                            'default_check_out':check_out,
+                                            'default_late_coming':late_coming,
+                                            'default_departure_early':departure_early,
+                                            'default_worked_hours':worked_hours,
+                                            'default_overtime_duration':overtime_duration,
+                                            'default_employee_day_status':employee_day_status,
+                                            'default_in_manual':in_manual,
+                                            'default_out_manual':out_manual,
+                                            'default_ot_day_status':ot_day_status,
+                                            'default_la_day_status':la_day_status,
+                                            'default_ed_day_status':ed_day_status,
+                                            'default_is_review':is_review,
+                                            'default_half_day_status':half_day_status,
+                                            'default_add_or_deduct':add_or_deduct,
+                                            'default_company_id':company_id}"/>
+
+                         <button name="hr_attendance_customization_fun_customize"  string="customize" type="object" class="btn btn-primary"
+                                    context="{'default_employee_id': employee_id,
+                                            'default_check_in':check_in,
+                                            'default_check_out':check_out,
+                                            'default_late_coming':late_coming,
+                                            'default_departure_early':departure_early,
+                                            'default_worked_hours':worked_hours,
+                                            'default_overtime_duration':overtime_duration,
+                                            'default_employee_day_status':employee_day_status,
+                                            'default_in_manual':in_manual,
+                                            'default_out_manual':out_manual,
+                                            'default_ot_day_status':ot_day_status,
+                                            'default_la_day_status':la_day_status,
+                                            'default_ed_day_status':ed_day_status,
+                                            'default_is_review':is_review,
+                                            'default_half_day_status':half_day_status,
+                                            'default_add_or_deduct':add_or_deduct,
+                                            'default_company_id':company_id}"/>
+            </tree>
+        </field>
+    </record>
+
+
+
+     <record id="action_hr_attendance_cust_ext" model="ir.actions.act_window">
+        <field name="name">Attendance</field>
+        <field name="res_model">hr.attendance</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="attendance_customization_ext"/>
+         <field name="domain">[('is_review', '=', True)]</field>
+<!--         <field name="domain">[('employee_day_status', '=', 'absent')]</field>-->
+    </record>
+
+     <record id="attendance_customization_ext_form" model="ir.ui.view">
+        <field name="name">hr.attendance.customization.from</field>
+        <field name="model">hr.attendance</field>
+        <field name="arch" type="xml">
+
+             <form name="Attendance Customization Form" create="0">
+                 <sheet>
+                 <group string="Check In/Check Out">
+                     <group>
+                        <field name="employee_id" readonly="1"/>
+                         <field name="check_in"/>
+                         <field name="worked_hours"/>
+                     </group>
+                     <group>
+                          <field name="company_id" readonly="1"/>
+                         <field name="check_out"/>
+                         <field name="attendance_date" readonly="1"/>
+                     </group>
+                 </group>
+
+                 <group string="After policies Verification">
+                     <group>
+                          <field name="late_coming" readonly="1" force_save="1"/>
+                         <field name="ot_day_status" readonly="1" force_save="1"/>
+                         <field name="in_manual" readonly="1" force_save="1"/>
+                         <field name="half_day_status" readonly="1" force_save="1"/>
+                         <field name="la_day_status" readonly="1" force_save="1"/>
+                         <field name="add_or_deduct"  readonly="1" force_save="1"/>
+                     </group>
+                     <group>
+                         <field name="departure_early" readonly="1" force_save="1"/>
+                         <field name="overtime_duration" readonly="1" force_save="1"/>
+                         <field name="out_manual" readonly="1" force_save="1"/>
+                         <field name="employee_day_status" readonly="1" force_save="1"/>
+                         <field name="ed_day_status" readonly="1" force_save="1"/>
+                         <field name="is_review" readonly="1" force_save="1" />
+                     </group>
+
+                 </group>
+                     <group string="Comment By HR">
+                         <field name="comment"/>
+                     </group>
+                 </sheet>
+
+            </form>
+        </field>
+    </record>
+
+     <record id="action_hr_attendance_cust_ext_form" model="ir.actions.act_window">
+        <field name="name">Attendance</field>
+        <field name="res_model">hr.attendance</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form,tree</field>
+        <field name="view_id" ref="attendance_customization_ext_form"/>
+    </record>
+
+<!--    <record id="attendance_customization_process_ext1" model="ir.actions.act_window">-->
+<!--        <field name="name"> Attendance edit</field>-->
+<!--        <field name="res_model">hr.attendance</field>-->
+<!--        <field name="type">ir.actions.act_window</field>-->
+<!--        <field name="view_type">tree</field>-->
+<!--        <field name="view_mode">tree,form</field>-->
+<!--        <field name="view_id" ref="attendance_customization_ext"/>-->
+<!--    </record>-->
+
+
+    <menuitem id="customization_attendance_menu_id" name="Attendance Customization" parent="hr_attendance.menu_hr_attendance_settings" sequence="60" action="action_hr_attendance_cust_ext"/>
+
+<!--    <record id="mrp_gate_pass_out_tree" model="ir.ui.view">-->
+<!--    <field name="name">mrp.challan.gatepass.out.tree</field>-->
+<!--    <field name="model">mrp.challan.gatepass.out</field>-->
+<!--    <field name="arch" type="xml" >-->
+<!--        <tree string="Job Order" decoration-success="state == 'gate_pass'" decoration-bf="state == 'draft'" create="0">-->
+<!--            <field name="name"/>-->
+<!--             <field name="process_name" options="{'no_open': True}"/>-->
+<!--            <field name="mo_no" options="{'no_open': True}"/>-->
+<!--            <field name="partner_id"/>-->
+<!--            <field name="state"/>-->
+<!--        </tree>-->
+<!--    </field>-->
+<!--</record>-->
+
+
+<record id="hr_attendance.hr_attendance_action" model="ir.actions.act_window">
+    <field name="name">Manual attendance</field>
+    <field name="res_model">hr.attendance</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="view_type">form</field>
+<!--    <field name="domain">[('state','=',('confirmed','rejected_by_gatepass_in'))]</field>-->
+    <field name="view_mode">tree,form</field>
+    <field name="view_id" ref="hr_attendance.view_attendance_tree"/>
+</record>
+
+<record model="ir.actions.act_window.view" id="hr_action_tree">
+    <field name="sequence" eval="1"/>
+    <field name="view_mode">tree</field>
+    <field name="view_id" ref="hr_attendance.view_attendance_tree"/>
+    <field name="act_window_id" ref="hr_attendance.hr_attendance_action"/>
+</record>
+<record model="ir.actions.act_window.view" id="hr_action_form">
+    <field name="sequence" eval="2"/>
+    <field name="view_mode">form</field>
+    <field name="view_id" ref="hr_attendance.hr_attendance_view_form"/>
+    <field name="act_window_id" ref="hr_attendance.hr_attendance_action"/>
+</record>
+
+
+
+<!--    <record id="hr_attendance.hr_attendance_action" model="ir.actions.act_window">-->
+<!--        <field name="name">Attendances</field>-->
+<!--        <field name="res_model">hr.attendance</field>-->
+<!--        <field name="view_type">form</field>-->
+<!--        <field name="view_mode">tree,kanban,form</field>-->
+<!--        <field name="context">{"search_default_today":1}</field>-->
+<!--        <field name="search_view_id" ref="hr_attendance.hr_attendance_view_filter" />-->
+<!--        <field name="view_id" ref="hr_attendance.view_attendance_tree"/>-->
+<!--        <field name="help" type="html">-->
+<!--            <p>The attendance records of your employees will be displayed here.</p>-->
+<!--            <p>Please make sure you're using the correct filter if you expected to see any.</p>-->
+<!--        </field>-->
+<!--    </record>-->
+
+</odoo>

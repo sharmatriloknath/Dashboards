@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!--MRS-->
+         <record id="first_item" model="inventory.user.dashboard.query">
+            <field name="model_name">material.req.slip</field>
+            <field name="label_name">total</field>
+            <field name="query">select * from material_req_slip where company_id = </field>
+        </record>
+         <record id="sec_item" model="inventory.user.dashboard.query">
+            <field name="model_name">material.req.slip</field>
+            <field name="label_name">pending</field>
+            <field name="query">select * from material_req_slip where state='sent_for_approval' and company_id = </field>
+        </record>
+
+        <record id="third_item" model="inventory.user.dashboard.query">
+            <field name="model_name">material.issue</field>
+            <field name="label_name">pending</field>
+            <field name="query">select * from material_issue where state='draft' and company_id=</field>
+        </record>
+
+        <record id="fourth_item" model="inventory.user.dashboard.query">
+            <field name="model_name">receipt.at.gate</field>
+            <field name="label_name">pending</field>
+            <field name="query">select * from stock_picking where picking_type_id in (select id from stock_picking_type where code ='incoming') and state not in ('done','cancel') and name = '/'  and company_id =
+        </field>
+        </record>
+
+        <record id="five_item" model="inventory.user.dashboard.query">
+            <field name="model_name">rows.and.coloum</field>
+            <field name="label_name">allocated</field>
+            <field name="query">select distinct * from rows_and_coloum where company_id=</field>
+        </record>
+
+        <record id="six_item" model="inventory.user.dashboard.query">
+            <field name="model_name">stock.warehouse.orderpoint</field>
+            <field name="label_name">total</field>
+            <field name="query">select * from stock_warehouse_orderpoint where active= true and  company_id=</field>
+        </record>
+
+         <record id="seven_item" model="inventory.user.dashboard.query">
+            <field name="model_name">product.template</field>
+            <field name="label_name">total</field>
+            <field name="query">select * from product_template where  active='true' and company_id=</field>
+        </record>
+
+        <record id="eight_item" model="inventory.user.dashboard.query">
+            <field name="model_name">receipt.at.main</field>
+            <field name="label_name">pending</field>
+            <field name="query">select * from stock_picking where picking_type_id in (select id from stock_picking_type where code ='internal' and name='Main Store') and state not in ('done','cancel') and company_id =</field>
+        </record>
+
+        <function id="create_inventory_dashboard_function" model="inventory.user.dashboard" name="create_card_for_inventory_user" />
+
+    </data>
+</odoo>

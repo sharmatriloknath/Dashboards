@@ -1,0 +1,199 @@
+<odoo>
+    <record id="sales_dasboard_kanban_view" model="ir.ui.view">
+        <field name="name">sales.dashboard.kanban</field>
+        <field name="model">sales.dashboard</field>
+        <field name="arch" type="xml">
+            <kanban class="oe_background_grey o_kanban_dashboard o_account_kanban" create="0">
+                <field name="computation" invisible="1"/>
+                <field name="name"/>
+                <field name="total"/>
+                <field name="pending"/>
+                <field name="color"/>
+                <field name="view_type"/>
+                <field name="sent"/>
+                <field name="emp_id"/>
+                <field name="approved"/>
+                <field name="confirm"/>
+                <field name="cancel"/>
+                <field name="draft"/>
+                <field name="hsn"/>
+                <field name="not_validated"/>
+                <field name="no_email"/>
+                <field name="ready"/>
+                <field name="partially"/>
+                <field name="amendment"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="#{kanban_color(record.color.raw_value)}">
+                            <div>
+                                <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                    <div class="o_kanban_record_top ">
+                                        <div class="o_kanban_record_headings">
+                                            <div>
+                                                <h3 >
+                                                     <strong><span><t t-esc="record.name.value"/></span></strong>
+                                                </h3>
+                                            </div>
+                                        </div>
+                                        <div t-attf-class="o_kanban_card_header">
+                                            <div class="o_kanban_manage_button_section">
+                                                <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" /></a>
+                                            </div>
+                                        </div>
+                                     </div>
+                                     <div class="container o_kanban_card_content">
+                                         <div class="row">
+                                            <t t-value="record.view_type.raw_value" t-set="type"/>
+                                            <t t-if="type === true" t-call="ActivityWise"/>
+                                         </div>
+                                    </div>
+                                    <div class="container o_kanban_card_manage_pane">
+                                         <div class="row">
+                                                    <div class="col-xs-6 o_kanban_card_manage_section o_kanban_manage_view">
+                                                        <div class="o_kanban_card_manage_title">
+                                                            <span>View</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                        <div t-if="widget.editable" class="o_kanban_card_manage_settings row">
+                                            <div class="col-xs-8">
+                                                <ul class="oe_kanban_colorpicker" data-field="color"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                   <t t-name="ActivityWise">
+
+                        <div t-if="record.name.raw_value == 'res.partner' or record.name.raw_value == 'product.template'">
+                            <div>
+                                <a name="get_list_view" type="object" t-attf-data-context="{'label_name':'total'}">
+                                 Total : <t t-esc="record.total.value" />
+                                </a>
+                            </div>
+
+                            <div t-if="record.name.raw_value == 'res.partner'">
+                                <a name="get_list_view" type="object" t-attf-data-context="{'label_name':'no_email'}">
+                                 Not Having Email : <t t-esc="record.no_email.value" />
+                                </a>
+                            </div>
+
+                             <div t-if="record.name.raw_value == 'product.template'">
+                                 <div>
+                                     <a name="get_list_view" type="object" t-attf-data-context="{'label_name':'hsn'}">
+                                        Not Having HSN : <t t-esc="record.hsn.value" />
+                                    </a>
+                                 </div>
+
+                                 <div>
+                                     <a name="get_list_view" type="object" t-attf-data-context="{'label_name':'not_validated'}">
+                                        Not Validated : <t t-esc="record.not_validated.value" />
+                                    </a>
+                                 </div>
+
+                            </div>
+
+                         </div>
+
+                        <div t-if="record.name.raw_value == 'crm.enquiry' or record.name.raw_value =='sale.quotation' or record.name.raw_value =='sale.order' or  record.name.raw_value =='pick' or  record.name.raw_value =='pack' or  record.name.raw_value =='dispatch'">
+
+                            <div t-if="record.name.raw_value == 'crm.enquiry' or record.name.raw_value =='sale.order'">
+                                <a name="get_list_view" type="object" t-attf-data-context="{'label_name':'approved'}">
+                                 Approved : <t t-esc="record.approved.value" />
+                             </a>
+                            </div>
+
+                            <div t-if="record.name.raw_value == 'crm.enquiry' or record.name.raw_value =='sale.quotation'">
+                                <a name="get_list_view" type="object" t-attf-data-context="{'label_name':'confirm'}">
+                                 Confirm : <t t-esc="record.confirm.value" />
+                             </a>
+                            </div>
+
+                             <div t-if="record.name.raw_value == 'sale.order' or record.name.raw_value =='sale.quotation'">
+                                <a name="get_list_view" type="object" t-attf-data-context="{'label_name':'sent'}">
+                                 Sent For Approval : <t t-esc="record.sent.value" />
+                             </a>
+                            </div>
+
+                            <div t-if="record.name.raw_value == 'crm.enquiry'">
+                                <a name="get_list_view" type="object" t-attf-data-context="{'label_name':'sent'}">
+                                 Sent For Review : <t t-esc="record.sent.value" />
+                             </a>
+                            </div>
+
+                            <div t-if="record.name.raw_value == 'sale.order'">
+                                <div>
+                                    <a name="get_list_view" type="object" t-attf-data-context="{'label_name':'cancel'}">
+                                 Cancel : <t t-esc="record.cancel.value" />
+                             </a>
+                                </div>
+
+                                 <div>
+                                    <a name="get_list_view" type="object" t-attf-data-context="{'label_name':'amendment'}">
+                                 Amendment In Last 30Days : <t t-esc="record.amendment.value" />
+                             </a>
+                                </div>
+
+                            </div>
+
+                             <div t-if="record.name.raw_value == 'pick' or record.name.raw_value == 'pack' or record.name.raw_value == 'dispatch'">
+                                <div>
+                                    <a name="get_list_view" type="object" t-attf-data-context="{'label_name':'partially'}">
+                                 Partially Available : <t t-esc="record.partially.value" />
+                             </a>
+                                </div>
+
+                                 <div>
+                                    <a name="get_list_view" type="object" t-attf-data-context="{'label_name':'ready'}">
+                                 Ready : <t t-esc="record.ready.value" />
+                             </a>
+                                </div>
+
+                            </div>
+
+
+                             <a name="get_list_view" type="object" t-attf-data-context="{'label_name':'pending'}">
+                                 Pending <t  t-esc="record.name.value"/> : <span style="color:red; font-weight:bold;"><t t-esc="record.pending.value" /></span>
+                             </a>
+
+                         </div>
+
+                       <div t-if="record.name.raw_value == 'sale.agreement'">
+                                <div>
+                                    <a name="get_list_view" type="object" t-attf-data-context="{'label_name':'draft'}">
+                                 Draft : <t t-esc="record.draft.value" />
+                             </a>
+                                </div>
+
+                                 <div>
+                                    <a name="get_list_view" type="object" t-attf-data-context="{'label_name':'confirm'}">
+                                 Confirmed : <t t-esc="record.confirm.value" />
+                             </a>
+                                </div>
+
+                            <div>
+                                    <a name="get_list_view" type="object" t-attf-data-context="{'label_name':'approved'}">
+                                 Approved : <t t-esc="record.approved.value" />
+                             </a>
+                                </div>
+
+                       </div>
+
+                    </t>
+            </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="sales_dashboard_kanban" model="ir.actions.act_window">
+        <field name="name">Sales Dashboard</field>
+        <field name="res_model">sales.dashboard</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">kanban,form</field>
+        <field name="view_id" ref="sales_dasboard_kanban_view"/>
+        <field name="usage">menu</field>
+    </record>
+    <menuitem id="sales_user_dashboard" name="Dashboard" action="sales_dashboard_kanban" parent="sale.sale_menu_root" sequence="0" />
+</odoo>

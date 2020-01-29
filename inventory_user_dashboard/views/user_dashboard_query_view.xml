@@ -1,0 +1,52 @@
+<odoo>
+    <record id="inventory_user_query_form_view" model="ir.ui.view">
+    <field name="name">inventory.user.dashboard.query.form</field>
+    <field name="model">inventory.user.dashboard.query</field>
+    <field name="type">form</field>
+    <field name="arch" type="xml">
+        <form string="User" create="0">
+            <sheet>
+                <group>
+                    <group>
+                        <field name="model_name"/>
+                    </group>
+                    <group>
+                        <field name="label_name"/>
+                    </group>
+                    <group>
+                        <field name="query"/>
+                        <field name="col_name"/>
+                    </group>
+                </group>
+            </sheet>
+        </form>
+    </field>
+    </record>
+
+
+    <record id="inventory_user_dashboard_query_tree_view" model="ir.ui.view">
+        <field name="name">inventory.user.dashboard.query.tree</field>
+        <field name="model">inventory.user.dashboard.query</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Dashboard Template Selector">
+                <field name="model_name"/>
+                <field name="label_name"/>
+                <field name="query"/>
+                <field name="col_name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="open_inventory_user_dashboard_query" model="ir.actions.act_window">
+        <field name="name">Inventory Dashboard Query</field>
+        <field name="res_model">inventory.user.dashboard.query</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="inventory_user_dashboard_query_tree_view"/>
+    </record>
+
+    <menuitem id="inventory_user_query_menu" name="User Dashboard Configure"  action="open_inventory_user_dashboard_query" parent="stock.menu_stock_config_settings" sequence="10"/>
+<!--    <menuitem id="inventory_user_query_menu" name="User Dashboard Configure"  action="open_inventory_user_dashboard_query" parent="stock.menu_stock_config_settings" groups="base.group_no_one" sequence="0"/>-->
+
+</odoo>

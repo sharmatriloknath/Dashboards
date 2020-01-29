@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!--PR-->
+        <record id="fifth_item" model="purchase.dynamic.dashboard.query">
+            <field name="model_name">purchase.req</field>
+            <field name="label_name">total</field>
+            <field name="query">select * from purchase_req where company_id =</field>
+        </record>
+        <record id="sixth_item" model="purchase.dynamic.dashboard.query">
+            <field name="model_name">purchase.req</field>
+            <field name="label_name">pending</field>
+            <field name="query">select * from purchase_req where state='sent_for_approval' and company_id =</field>
+        </record>
+        <!--<record id="seventh_item" model="purchase.dynamic.dashboard.query">-->
+            <!--<field name="model_name">purchase.req</field>-->
+            <!--<field name="type">user_wise</field>-->
+            <!--<field name="label_name">total</field>-->
+            <!--<field name="query">select count(id) from purchase_req</field>-->
+        <!--</record>-->
+        <!--<record id="eighth_item" model="purchase.dynamic.dashboard.query">-->
+             <!--<field name="model_name">purchase.req</field>-->
+            <!--<field name="type">user_wise</field>-->
+            <!--<field name="label_name">pending</field>-->
+            <!--<field name="query">select count(id) from purchase_req where state='sent_for_approval'</field>-->
+        <!--</record>-->
+        <!--PO-->
+        <record id="ninth_item" model="purchase.dynamic.dashboard.query">
+            <field name="model_name">purchase.order</field>
+            <field name="label_name">total</field>
+            <field name="query">select * from purchase_order where company_id =</field>
+        </record>
+        <record id="tenth_item" model="purchase.dynamic.dashboard.query">
+            <field name="model_name">purchase.order</field>
+            <field name="label_name">pending</field>
+            <field name="query">select * from purchase_order where state='sent_for_approval' and company_id = </field>
+        </record>
+        <!--<record id="11th_item" model="purchase.dynamic.dashboard.query">-->
+            <!--<field name="model_name">purchase.order</field>-->
+            <!--<field name="type">user_wise</field>-->
+            <!--<field name="label_name">total</field>-->
+            <!--<field name="query">select count(id) from purchase_order</field>-->
+        <!--</record>-->
+        <!--<record id="12th_item" model="purchase.dynamic.dashboard.query">-->
+             <!--<field name="model_name">purchase.order</field>-->
+            <!--<field name="type">user_wise</field>-->
+            <!--<field name="label_name">pending</field>-->
+            <!--<field name="query">select count(id) from purchase_order where state='sent_for_approval'</field>-->
+        <!--</record>-->
+        <!--RFQ-->
+        <record id="13th_item" model="purchase.dynamic.dashboard.query">
+            <field name="model_name">request.for.quotation</field>
+            <field name="label_name">total</field>
+            <field name="query">select * from request_for_quotation where company_id =</field>
+        </record>
+        <record id="14th_item" model="purchase.dynamic.dashboard.query">
+            <field name="model_name">request.for.quotation</field>
+            <field name="label_name">pending</field>
+            <field name="query">select * from request_for_quotation where purchase_req_id NOT IN (select id from purchase_req where state='approve') and company_id =</field>
+        </record>
+        <!--<record id="15th_item" model="purchase.dynamic.dashboard.query">-->
+            <!--<field name="model_name">request.for.quotation</field>-->
+            <!--<field name="type">user_wise</field>-->
+            <!--<field name="label_name">total</field>-->
+            <!--<field name="query">select count(id) from request_for_quotation</field>-->
+        <!--</record>-->
+        <!--<record id="16th_item" model="purchase.dynamic.dashboard.query">-->
+             <!--<field name="model_name">request.for.quotation</field>-->
+            <!--<field name="type">user_wise</field>-->
+            <!--<field name="label_name">pending</field>-->
+            <!--<field name="query">select count(id) from request_for_quotation where purchase_req_id NOT IN (select id from purchase_req where state='approve')</field>-->
+        <!--</record>-->
+        <!--Quotation-->
+        <record id="17th_item" model="purchase.dynamic.dashboard.query">
+            <field name="model_name">supplier.quotation</field>
+            <field name="label_name">total</field>
+            <field name="query">select * from supplier_quotation where company_id =</field>
+        </record>
+        <record id="18th_item" model="purchase.dynamic.dashboard.query">
+            <field name="model_name">supplier.quotation</field>
+            <field name="label_name">pending</field>
+            <field name="query">select * from supplier_quotation where rfq_id NOT IN (select id from request_for_quotation where status='done') and company_id=</field>
+        </record>
+        <!--<record id="19th_item" model="purchase.dynamic.dashboard.query">-->
+            <!--<field name="model_name">pr.create.data</field>-->
+            <!--<field name="label_name">total</field>-->
+            <!--<field name="query">select * from pr_create_data</field>-->
+        <!--</record>-->
+        <record id="19th_item" model="purchase.dynamic.dashboard.query">
+            <field name="model_name">pr.create.data</field>
+            <field name="label_name">pending</field>
+            <field name="query">select * from pr_create_data where state='pending' and categ_id IN (select id from product_category ) and company_id =</field>
+        </record>
+
+<!--        <record id="50th_item" model="purchase.dynamic.dashboard.query">-->
+<!--            <field name="model_name">kpi.matrix</field>-->
+<!--            <field name="label_name">total</field>-->
+<!--            <field name="query">select * from kpi_matrix where company_id =</field>-->
+<!--        </record>-->
+
+
+<!--        <record id="51th_item" model="purchase.dynamic.dashboard.query">-->
+<!--            <field name="model_name">purchase.requisition</field>-->
+<!--            <field name="label_name">total</field>-->
+<!--            <field name="query">select * from purchase_requisition where company_id =</field>-->
+<!--        </record>-->
+
+<!--        <record id="52th_item" model="purchase.dynamic.dashboard.query">-->
+<!--            <field name="model_name">material.req.slip</field>-->
+<!--            <field name="label_name">total</field>-->
+<!--            <field name="query">select * from material_req_slip where type = 'indent' and company_id =</field>-->
+<!--        </record>-->
+
+        <!--<record id="20th_item" model="purchase.dynamic.dashboard.query">-->
+            <!--<field name="model_name">pr.create.data</field>-->
+            <!--<field name="label_name">min_required_date</field>-->
+            <!--<field name="query">select * from pr_create_data where state='pending' and categ_id IN (select id from product_category</field>-->
+        <!--</record>-->
+         <!--<record id="21_item" model="purchase.dynamic.dashboard.query">-->
+            <!--<field name="model_name">pr.create.data</field>-->
+            <!--<field name="label_name">priority</field>-->
+            <!--<field name="query">select * from pr_create_data where state='pending'</field>-->
+        <!--</record>-->
+        <!--<record id="19th_item" model="purchase.dynamic.dashboard.query">-->
+            <!--<field name="model_name">supplier.quotation</field>-->
+            <!--<field name="label_name">total</field>-->
+            <!--<field name="query">select count(id) from supplier_quotation</field>-->
+        <!--</record>-->
+        <!--<record id="20th_item" model="purchase.dynamic.dashboard.query">-->
+             <!--<field name="model_name">supplier.quotation</field>-->
+            <!--<field name="label_name">pending</field>-->
+            <!--<field name="query">select count(id) from supplier_quotation where rfq_id NOT IN (select id from request_for_quotation where status='done')</field>-->
+        <!--</record>-->
+
+
+        <function id="create_dashboard_user_function" model="purchase.dynamic.dashboard" name="create_card_for_purchase_extension_user" />
+
+    </data>
+</odoo>

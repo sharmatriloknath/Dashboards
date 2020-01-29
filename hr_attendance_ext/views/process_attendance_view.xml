@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Process Attendance-->
+
+    <record id="attendance_process_form" model="ir.ui.view">
+        <field name="name">attendance.process.form</field>
+        <field name="model">process.attendance</field>
+        <field name="arch" type="xml">
+            <form string="Attendance"  create="0" edit="0" name="Attendance">
+                <sheet string="Attendance Details">
+                    <group>
+                        <group>
+                       <field name="from_date"/>
+                    </group>
+                     <group>
+                          <field name="to_date"/>
+                    </group>
+                    </group>
+                     <button string="process attendance" type="object" name="process_employee_attendance" class="btn btn-danger" style="margin-right:15px"/>
+                     <button string="cancel" type="object" name="process_attendance_cancel" class="btn btn_success"/>
+                    <notebook>
+                        <page string="Attendance Details">
+                            <field name="process_attendance_ids" readonly="1" string="Test">
+                                <tree editable="top" create="0" readonly="1" string="Attendance" >
+                                    <field name="name" readonly="1"/>
+                                    <field name="employee_id" invisible="1" readonly="1"/>
+                                    <field name="department" readonly="1"/>
+                                    <field name="designation" readonly="1"/>
+                                    <field name="from_date" readonly="1"/>
+                                    <field name="to_date" readonly="1"/>
+                                    <field name="total_days" readonly="1"/>
+                                    <field name="present_count" readonly="1"/>
+                                    <field name="late_coming_count" readonly="1"/>
+                                    <field name="overtime_duration" readonly="1"/>
+                                    <field name="in_manual_count" readonly="1"/>
+                                    <field name="out_manual_count" readonly="1"/>
+                                    <field name="departure_early_count" readonly="1"/>
+                                    <field name="la_day_status_count" readonly="1"/>
+                                    <field name="ed_day_status_count" readonly="1"/>
+                                    <field name="ot_day_status_count" readonly="1"/>
+                                    <field name="leaves" readonly="1" invisible="1"/>
+                                    <field name="absent_count" readonly="1"/>
+                                    <button name="hr_attendance_details"  string="Details" type="object" class="btn btn-primary"
+                                            context="{'employee_id': employee_id,
+                                            'date_from':from_date,
+                                            'date_to':to_date,
+                                            'department':department,
+                                            'designation':designation,
+                                            'total_days':total_days,
+                                            'name':name}"/>
+
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="detailed_attendance_process_tree" model="ir.ui.view">
+        <field name="name">detailed.attendance.details.form</field>
+        <field name="model">detailed.attendance.details</field>
+        <field name="view_mode">tree</field>
+        <field name="arch" type="xml">
+            <tree name="Attendance Detailed Form"  create="0" edit="0" delete="0" decoration-danger="employee_day_status=='absent'"  decoration-success="late_coming=='yes'" decoration-warning="is_review==True">
+                        <field name="name"  />
+                        <field name="employee_id" invisible="1"/>
+                        <field name="department"/>
+                        <field name="designation"/>
+                        <field name="from_date" invisible="1"/>
+                        <field name="to_date" invisible="1"/>
+                        <field name="total_days" invisible="1"/>
+                        <field name="attendance_date"/>
+                        <field name="check_in"/>
+                        <field name="check_out"/>
+                        <field name="late_coming"/>
+                        <field name="departure_early"/>
+                        <field name="worked_hours"/>
+                        <field name="overtime_duration"/>
+                        <field name="employee_day_status"/>
+                        <field name="in_manual"/>
+                        <field name="out_manual"/>
+                        <field name="ot_day_status"/>
+                        <field name="la_day_status"/>
+                        <field name="ed_day_status"/>
+                        <field name="is_review" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="process_attendance_details_form" model="ir.ui.view">
+        <field name="name">process.attendance.details.form</field>
+        <field name="model">process.attendance.details</field>
+        <field name="view_mode">form</field>
+        <field name="arch" type="xml">
+
+            <form string="Attendance"  create="0" edit="0">
+                <sheet string="Attendance">
+                    <group>
+                        <group>
+                            <field name="name" readonly="1"/>
+                            <field name="employee_id" invisible="1" readonly="1"/>
+                            <field name="department" readonly="1"/>
+                            <field name="designation" readonly="1"/>
+                            <field name="from_date" readonly="1"/>
+                            <field name="to_date" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="total_days" readonly="1"/>
+                            <field name="present_count" readonly="1"/>
+                            <field name="late_coming_count" readonly="1"/>
+                            <field name="leaves" readonly="1"/>
+                            <field name="absent_count" readonly="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+
+        </field>
+    </record>
+
+    <record id="action_process_attendance_form" model="ir.actions.act_window">
+        <field name="name"> Employee Details</field>
+        <field name="res_model">process.attendance</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="view_id" eval="False"/>
+    </record>
+
+    <!-- MENU ITEMS -->
+    <menuitem id="menu_attendance_process" name="Process Attendance" parent="hr_attendance.menu_hr_attendance_settings" sequence="50" action="action_process_attendance_form"/>
+</odoo>

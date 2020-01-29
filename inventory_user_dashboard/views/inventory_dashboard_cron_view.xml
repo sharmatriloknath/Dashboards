@@ -1,0 +1,40 @@
+<odoo>
+    <record id="inventory_dashboard_cron_form_view" model="ir.ui.view">
+    <field name="name">inventory.dashboard.cron.form</field>
+    <field name="model">inventory.dashboard.cron</field>
+    <field name="type">form</field>
+    <field name="arch" type="xml">
+        <form string="User">
+            <sheet>
+                <group>
+                        <field name="time_interval"/>
+                </group>
+            </sheet>
+        </form>
+    </field>
+    </record>
+
+
+    <record id="inventory_dashboard_cron_tree_view" model="ir.ui.view">
+        <field name="name">inventory.dashboard.cron.tree</field>
+        <field name="model">inventory.dashboard.cron</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Dashboard Template Selector">
+                <field name="time_interval"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="open_inventory_dashboard_cron" model="ir.actions.act_window">
+        <field name="name">Inventory Dashboard Cron</field>
+        <field name="res_model">inventory.dashboard.cron</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="inventory_dashboard_cron_tree_view"/>
+    </record>
+
+    <menuitem id="purchase_inventory_cron_menu" name="Dashboard Refresher" action="open_inventory_dashboard_cron" parent="stock.menu_stock_config_settings" sequence="11"/>
+<!--    <menuitem id="purchase_dashboard_cron_menu" name="Dashboard Refresher" action="open_purchase_dashboard_cron" parent="purchase.menu_purchase_config" sequence="21"/>-->
+
+</odoo>

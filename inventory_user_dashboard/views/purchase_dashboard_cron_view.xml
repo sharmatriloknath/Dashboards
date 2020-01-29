@@ -1,0 +1,38 @@
+<odoo>
+    <record id="purchase_dashboard_cron_form_view" model="ir.ui.view">
+    <field name="name">purchase.extension.dashboard.cron.form</field>
+    <field name="model">purchase.extension.dashboard.cron</field>
+    <field name="type">form</field>
+    <field name="arch" type="xml">
+        <form string="User">
+            <sheet>
+                <group>
+                        <field name="time_interval"/>
+                </group>
+            </sheet>
+        </form>
+    </field>
+    </record>
+
+
+    <record id="purchase_dashboard_cron_tree_view" model="ir.ui.view">
+        <field name="name">purchase.extension.dashboard.cron.tree</field>
+        <field name="model">purchase.extension.dashboard.cron</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Dashboard Template Selector">
+                <field name="time_interval"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="open_purchase_dashboard_cron" model="ir.actions.act_window">
+        <field name="name">Purchase Dashboard Cron</field>
+        <field name="res_model">purchase.extension.dashboard.cron</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="purchase_dashboard_cron_tree_view"/>
+    </record>
+
+    <menuitem id="purchase_dashboard_cron_menu" name="Dashboard Scheduler" action="open_purchase_dashboard_cron" parent="purchase.menu_purchase_config" sequence="151"/>
+</odoo>

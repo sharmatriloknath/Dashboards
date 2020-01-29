@@ -1,0 +1,48 @@
+<odoo>
+    <record id="purchase_dashboard_query_form_view" model="ir.ui.view">
+    <field name="name">purchase.extension.dashboard.query.form</field>
+    <field name="model">purchase.extension.dashboard.query</field>
+    <field name="type">form</field>
+    <field name="arch" type="xml">
+        <form string="User" create="0">
+            <sheet>
+                <group>
+                    <group>
+                        <field name="model_name"/>
+                    </group>
+                    <group>
+                        <field name="label_name"/>
+                    </group>
+                    <group>
+                        <field name="query"/>
+                    </group>
+                </group>
+            </sheet>
+        </form>
+    </field>
+    </record>
+
+
+    <record id="purchase_dashboard_query_tree_view" model="ir.ui.view">
+        <field name="name">purchase.extension.dashboard.query.tree</field>
+        <field name="model">purchase.extension.dashboard.query</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Dashboard Template Selector">
+                <field name="model_name"/>
+                <field name="label_name"/>
+                <field name="query"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="open_purchase_dashboard_query" model="ir.actions.act_window">
+        <field name="name">Purchase Dashboard Query</field>
+        <field name="res_model">purchase.extension.dashboard.query</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="purchase_dashboard_query_tree_view"/>
+    </record>
+
+<!--    <menuitem id="purchase_dashboard_query_menu" name="Dashboard Configure" groups="group_admin_config" action="open_purchase_dashboard_query" parent="purchase.menu_purchase_config" sequence="150"/>-->
+</odoo>
